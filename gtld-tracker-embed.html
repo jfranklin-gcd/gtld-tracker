@@ -12,21 +12,16 @@
 :root{
   /* Brand: swap these two for exact GCD values */
   --brand-teal:#6FD3CB; --brand-black:#000000;
-  --teal-deep:#0B7A73; /* darker teal for text/links on white (readable contrast) */
   --bg:#F4F7F7; --panel:#FFFFFF; --ink:#000000; --muted:#56615F; --line:#D8E2E1;
   --seat:#2FB3AA; --seat-off:#E1EBEA; --watch:#8A5300; --watch-bg:#FFF1D6;
-  --gone:#8A9492; --focus:#0B7A73; --link:#0B7A73;
+  --focus:#0B7A73; --link:#0B7A73;
   --font:"Schibsted Grotesk", "Helvetica Neue", Arial, system-ui, sans-serif;
 }
 @media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
+  :root{
     --bg:#0A0B0B; --panel:#151818; --ink:#EEF4F3; --muted:#9FAEAC; --line:#283130;
-    --seat:#6FD3CB; --seat-off:#243030; --watch:#F2B75B; --watch-bg:#30260F; --gone:#6D7876; --focus:#6FD3CB; --link:#6FD3CB;
+    --seat:#6FD3CB; --seat-off:#243030; --watch:#F2B75B; --watch-bg:#30260F; --focus:#6FD3CB; --link:#6FD3CB;
   }
-}
-:root[data-theme="dark"]{
-  --bg:#0A0B0B; --panel:#151818; --ink:#EEF4F3; --muted:#9FAEAC; --line:#283130;
-    --seat:#6FD3CB; --seat-off:#243030; --watch:#F2B75B; --watch-bg:#30260F; --gone:#6D7876; --focus:#6FD3CB; --link:#6FD3CB;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.5}
@@ -37,8 +32,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font
 .gx-stats div{padding:10px 12px 9px;display:flex;flex-direction:column-reverse;justify-content:flex-end}
 .gx-stats div+div{border-left:1px solid rgba(111,211,203,.35)}
 .gx-stats dt{font-size:13px;color:#B9C4C3}
-.gx-stats dd{margin:0 0 2px;font-size:clamp(22px,3.4vw,32px);font-weight:700;letter-spacing:-.02em;line-height:1.05;font-variant-numeric:tabular-nums}
-.gx-stats dd{color:#FFFFFF}
+.gx-stats dd{color:#FFFFFF;margin:0 0 2px;font-size:clamp(22px,3.4vw,32px);font-weight:700;letter-spacing:-.02em;line-height:1.05;font-variant-numeric:tabular-nums}
 .gx-stats div.is-key dd{color:var(--brand-teal)}
 .gx-bnote{margin:10px 0 0;font-size:13px;color:#B9C4C3}
 @media (max-width:520px){.gx-stats div{padding:8px 8px 7px}.gx-stats dt{font-size:12px}}
@@ -51,8 +45,6 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font
 .gx-seg button[aria-pressed="true"]{background:var(--brand-black);color:var(--brand-teal);font-weight:600}
 .gx-select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);max-width:100%}
 #gx-app{width:220px}
-.gx-check{font-size:14px;color:var(--muted);display:inline-flex;gap:6px;align-items:center;cursor:pointer;white-space:nowrap}
-.gx-check input{accent-color:var(--seat);width:16px;height:16px}
 .gx-count{font-size:13px;color:var(--muted);margin:8px 0}
 .gx-count b{color:var(--ink)}
 
@@ -85,7 +77,6 @@ dialog.gx-dlg::backdrop{background:rgba(10,16,30,.55)}
 .gx-apps{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
 .gx-apps li{padding:10px 0;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:baseline}
 .gx-apps li i{flex:none;width:14px;height:8px;border-radius:2px;background:var(--seat);transform:translateY(-1px)}
-.gx-apps small{display:block;color:var(--muted);font-size:13px}
 .gx-tags{display:flex;flex-wrap:wrap;gap:6px}
 .gx-tags span{font-size:13px;padding:3px 8px;border-radius:4px;background:var(--seat-off)}
 .gx-callout{background:var(--watch-bg);color:var(--ink);border-radius:8px;padding:10px 12px;font-size:14px;margin-top:16px}
@@ -94,7 +85,6 @@ dialog.gx-dlg::backdrop{background:rgba(10,16,30,.55)}
 .gx-src a{color:var(--link);word-break:break-all}
 .gx-meta{font-size:13px;color:var(--muted);margin-top:18px}
 @media (max-width:640px){.gx-str{font-size:19px}.gx-seats i{width:9px}#gx-app{width:auto;flex:1 1 180px}.gx-seg{flex:1 1 auto}.gx-seg button{flex:1}}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
@@ -120,7 +110,6 @@ dialog.gx-dlg::backdrop{background:rgba(10,16,30,.55)}
     <select class="gx-select" id="gx-script" aria-label="Filter by script">
       <option value="">Any script</option><option value="latin">Latin</option><option value="idn">IDN (non-Latin)</option>
     </select>
-    <label class="gx-check"><input type="checkbox" id="gx-watch"> Watch list</label>
   </div>
 
   <p class="gx-count" id="gx-count" aria-live="polite"></p>
@@ -155,7 +144,7 @@ const rows = DATA.rows.map(r => {
   });
 });
 
-const state = {view:'contested', q:'', app:'', script:'', watch:false, shown:PAGE};
+const state = {view:'contested', q:'', app:'', script:'', shown:PAGE};
 const $ = id => document.getElementById(id);
 
 // Header
@@ -179,7 +168,6 @@ function filtered(){
     if (state.app !== '' && !r.a.includes(+state.app)) return false;
     if (state.script === 'idn' && !r.idn) return false;
     if (state.script === 'latin' && r.idn) return false;
-    if (state.watch && !r.w) return false;
     if (q && !r.hay.includes(q)) return false;
     return true;
   }).sort((a,b) => (b.contested - a.contested) || (b.k - a.k) || (a.withdrawn - b.withdrawn) || a.s.localeCompare(b.s));
@@ -246,9 +234,8 @@ document.querySelectorAll('.gx-seg button').forEach(b => b.addEventListener('cli
   render();
 }));
 let t; $('gx-q').addEventListener('input', e => { clearTimeout(t); t = setTimeout(() => { state.q = e.target.value; state.shown = PAGE; render(); }, 120); });
-$('gx-app').addEventListener('change', e => { state.app = e.target.value; state.shown = PAGE; if (e.target.value !== '' && state.view === 'contested') {} render(); });
+$('gx-app').addEventListener('change', e => { state.app = e.target.value; state.shown = PAGE; render(); });
 $('gx-script').addEventListener('change', e => { state.script = e.target.value; state.shown = PAGE; render(); });
-$('gx-watch').addEventListener('change', e => { state.watch = e.target.checked; state.shown = PAGE; render(); });
 $('gx-more').addEventListener('click', () => { state.shown += PAGE; render(); });
 render();
 })();
